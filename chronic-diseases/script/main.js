@@ -1,3 +1,7 @@
+if('serviceWorker' in navigator && location.hostname !== 'localhost'){
+    navigator.serviceWorker.register('sw.js');
+}
+
 // on load page
 window.onload = () => {
     customElements.define("note-section", Note);
