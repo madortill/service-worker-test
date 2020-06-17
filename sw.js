@@ -2,6 +2,12 @@
 /// <reference lib="es2015"/>
 /// <reference no-default-lib="true"/>
 let cacheName = "till-service-worker";
+let location = "/";
+
+addEventListener("message", (e) => {
+    if ('location' in e.data)
+        location = e.data.location;
+}, false);
 
 /**
  * 
@@ -9,15 +15,17 @@ let cacheName = "till-service-worker";
  */
 function setup(client) {
     if (client) return Promise.resolve();
-    let statusFile = fetch("build.version");
+    let statusFile = fetch(location + "build.version");
     return statusFile.then(statusBody => statusBody.clone().text().then(status =>
         caches.open(cacheName).then(c =>
-            c.match("/build.version").then(file => (file && file.text()) || Promise.resolve("")).then(onlineStatus => {
+            c.match(location + "build.version").then(file => (file && file.text()) || Promise.resolve("")).then(onlineStatus => {
                 self.refetch = status !== onlineStatus;
-                if (self.refetch) caches.open(cacheName).then(c => c.put("/build.version", statusBody.clone()));
+                if (self.refetch) caches.open(cacheName).then(c => c.put(location + "build.version", statusBody.clone()));
             })
         )
-    ));
+    )).catch(e => {
+        return Promise.resolve();
+    });
 }
 
 addEventListener("fetch", function (e) {

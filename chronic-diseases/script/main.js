@@ -1,5 +1,7 @@
 if('serviceWorker' in navigator && location.hostname !== 'localhost'){
-    navigator.serviceWorker.register('../sw.js');
+    let location = "../"
+    let worker = navigator.serviceWorker.register(location + 'sw.js');
+    worker.then(w => w.active.postMessage({ location  }))
 }
 
 // on load page
