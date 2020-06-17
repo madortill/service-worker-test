@@ -1,7 +1,7 @@
 if('serviceWorker' in navigator && location.hostname !== 'localhost'){
     let location = "../"
     let worker = navigator.serviceWorker.register(location + 'sw.js');
-    worker.then(w => w.active.postMessage({ location  }))
+    worker.then(w => (w.installing || w.active).postMessage({ location  }))
 }
 
 // on load page
